@@ -2,18 +2,7 @@ import { useState } from 'react';
 import './App.css';
 import clsx from 'clsx';
 
-const TODOS = [
-    {
-        id: 1,
-        content: 'Learn JavaScript',
-        completed: false,
-    },
-    {
-        id: 2,
-        content: 'Lear HTML',
-        completed: true,
-    },
-];
+const TODOS = [];
 
 function TodoItem({ todo, onTodoCompletedChange, onTodoContentChange, onTodoDelete }) {
     const [editing, setEditing] = useState(false);
