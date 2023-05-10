@@ -77,9 +77,10 @@ function App() {
     const [todos, setTodos] = useState(TODOS);
     const [content, setContent] = useState('');
     const [search, setSearch] = useState('');
+    const [filter, setFilter] = useState('all');
     useEffect(() => {
         readFB();
-    }, [search]);
+    }, [search, filter]);
     async function readFB() {
         const querySnapshot = await getDocs(collection(db, 'todos'));
 
@@ -101,6 +102,12 @@ function App() {
                         return todo.id.toString().includes(id);
                     }
                 }
+            })
+            .filter((todo) => {
+                if (filter === 'all') return true;
+                if (filter === 'active' && !todo.completed) return true;
+                if (filter === 'completed' && todo.completed) return true;
+                return false;
             });
 
         setTodos(tmpTodos);
@@ -188,15 +195,22 @@ function App() {
 
                     <ul className="filters">
                         <li>
-                            <a className="selected" href="#/">
+                            <a className={clsx({ selected: filter === 'all' })} onClick={() => setFilter('all')}>
                                 All
                             </a>
                         </li>
                         <li>
-                            <a href="#/active">Active</a>
+                            <a className={clsx({ selected: filter === 'active' })} onClick={() => setFilter('active')}>
+                                Active
+                            </a>
                         </li>
                         <li>
-                            <a href="#/completed">Completed</a>
+                            <a
+                                className={clsx({ selected: filter === 'completed' })}
+                                onClick={() => setFilter('completed')}
+                            >
+                                Completed
+                            </a>
                         </li>
                     </ul>
                     <button className="clear-completed">Clear completed</button>
