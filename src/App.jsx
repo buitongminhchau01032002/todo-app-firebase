@@ -46,6 +46,7 @@ function TodoItem({ todo, onTodoCompletedChange, onTodoContentChange, onTodoDele
 function App() {
     const [todos, setTodos] = useState(TODOS);
     const [content, setContent] = useState('');
+    const [search, setSearch] = useState('');
     useEffect(() => {
         readFB();
     }, []);
@@ -104,6 +105,12 @@ function App() {
             <section className="todoapp">
                 <header className="header">
                     <h1 style={{ color: '#FC8EAC' }}>todos</h1>
+                    <input
+                        className="new-todo"
+                        value={search}
+                        placeholder="Find todo"
+                        onChange={(e) => setSearch(e.target.value)}
+                    />
                     <input
                         className="new-todo"
                         value={content}
