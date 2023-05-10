@@ -26,24 +26,24 @@ function TodoItem({ todo, onTodoCompletedChange, onTodoContentChange, onTodoDele
     }
     return (
         <li
-            class={clsx({
+            className={clsx({
                 completed: todo.completed,
                 view: !todo.completed,
                 editing: editing,
             })}
         >
-            <div class="view">
+            <div className="view">
                 <input
-                    class="toggle"
+                    className="toggle"
                     type="checkbox"
                     checked={todo.completed}
                     onChange={() => onTodoCompletedChange(todo.id, !todo.completed)}
                 />
                 <label onClick={() => setEditing(!editing)}>{todo.content}</label>
-                <button class="destroy" onClick={() => onTodoDelete(todo.id)}></button>
+                <button className="destroy" onClick={() => onTodoDelete(todo.id)}></button>
             </div>
             <input
-                class="edit"
+                className="edit"
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
                 onBlur={() => setEditing(false)}
@@ -92,23 +92,23 @@ function App() {
     }
     return (
         <>
-            <section class="todoapp">
-                <header class="header">
+            <section className="todoapp">
+                <header className="header">
                     <h1>todos</h1>
                     <input
-                        class="new-todo"
+                        className="new-todo"
                         value={content}
                         onChange={(e) => setContent(e.target.value)}
                         onKeyDown={handleAddTodoKeyDown}
                         placeholder="What needs to be done?"
-                        autofocus
+                        autoFocus
                     />
                 </header>
 
-                <section class="main">
-                    <input id="toggle-all" class="toggle-all" type="checkbox" />
-                    <label for="toggle-all">Mark all as complete</label>
-                    <ul class="todo-list">
+                <section className="main">
+                    <input id="toggle-all" className="toggle-all" type="checkbox" />
+                    <label htmlFor="toggle-all">Mark all as complete</label>
+                    <ul className="todo-list">
                         {todos.map((todo) => (
                             <TodoItem
                                 key={todo.id}
@@ -121,14 +121,14 @@ function App() {
                     </ul>
                 </section>
 
-                <footer class="footer">
-                    <span class="todo-count">
+                <footer className="footer">
+                    <span className="todo-count">
                         <strong>0</strong> item left
                     </span>
 
-                    <ul class="filters">
+                    <ul className="filters">
                         <li>
-                            <a class="selected" href="#/">
+                            <a className="selected" href="#/">
                                 All
                             </a>
                         </li>
@@ -139,10 +139,10 @@ function App() {
                             <a href="#/completed">Completed</a>
                         </li>
                     </ul>
-                    <button class="clear-completed">Clear completed</button>
+                    <button className="clear-completed">Clear completed</button>
                 </footer>
             </section>
-            <footer class="info">
+            <footer className="info">
                 <p>Double-click to edit a todo</p>
                 <p>
                     Template by <a href="http://sindresorhus.com">Sindre Sorhus</a>
