@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './App.css';
 import clsx from 'clsx';
-
+import { addDoc, collection, getDocs, doc, updateDoc, deleteDoc } from 'firebase/firestore';
+import db from '../firebase';
 const TODOS = [];
 
 function TodoItem({ todo, onTodoCompletedChange, onTodoContentChange, onTodoDelete }) {
@@ -45,38 +46,56 @@ function TodoItem({ todo, onTodoCompletedChange, onTodoContentChange, onTodoDele
 function App() {
     const [todos, setTodos] = useState(TODOS);
     const [content, setContent] = useState('');
-    function handleTodoContentChange(id, content) {
-        const todosTemp = todos.map((todo) => {
-            if (todo.id === id) {
-                return { ...todo, content };
-            }
-            return todo;
+    useEffect(() => {
+        readFB();
+    }, []);
+    async function readFB() {
+        const querySnapshot = await getDocs(collection(db, 'todos'));
+        let tmpTodos = [];
+        querySnapshot.forEach((doc) => {
+            tmpTodos.push({
+                id: doc.id,
+                ...doc.data(),
+            });
         });
-        setTodos(todosTemp);
+        setTodos(tmpTodos);
     }
-    function handleTodoCompletedChange(id, completed) {
-        const todosTemp = todos.map((todo) => {
-            if (todo.id === id) {
-                return { ...todo, completed };
-            }
-            return todo;
+
+    async function handleTodoContentChange(id, content) {
+        const todoRef = doc(db, 'todos', id);
+
+        // Set the "capital" field of the city 'DC'
+        await updateDoc(todoRef, {
+            content: content,
         });
-        setTodos(todosTemp);
+        await readFB();
     }
-    function handleTodoDelete(id) {
-        const todosTemp = todos.filter((todo) => todo.id !== id);
-        setTodos(todosTemp);
+    async function handleTodoCompletedChange(id, completed) {
+        const todoRef = doc(db, 'todos', id);
+
+        // Set the "capital" field of the city 'DC'
+        await updateDoc(todoRef, {
+            completed: completed,
+        });
+        await readFB();
     }
-    function handleAddTodoKeyDown(e) {
+    async function handleTodoDelete(id) {
+        await deleteDoc(doc(db, 'todos', id));
+        await readFB();
+    }
+    async function handleAddTodoKeyDown(e) {
         if (e.key === 'Enter') {
-            setTodos([
-                ...todos,
-                {
-                    id: Math.random(),
-                    content,
+            try {
+                const docRef = await addDoc(collection(db, 'todos'), {
+                    content: content,
                     completed: false,
-                },
-            ]);
+                });
+
+                console.log('Document written with ID: ', docRef.id);
+            } catch (e) {
+                console.error('Error adding document: ', e);
+            }
+            await readFB();
             setContent('');
         }
     }
@@ -84,7 +103,7 @@ function App() {
         <>
             <section className="todoapp">
                 <header className="header">
-                    <h1>todos</h1>
+                    <h1 style={{ color: '#FC8EAC' }}>todos</h1>
                     <input
                         className="new-todo"
                         value={content}
